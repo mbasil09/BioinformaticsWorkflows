@@ -59,7 +59,7 @@ class Graph:
 
 # Create a graph given in the above diagram 
 
-graph = Graph(8) 
+graph = Graph(18) 
 names = {0:"GeoID", 1:"fastsanger", 2:"BAM", 3:"countMatrix", 4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap", 7:"SAM",
          8:"Drug name", 9:"drug ID", 10:"drug pathway", 11:"chemical compound name", 12:"compound features", 13:"DNA Sequence", 
          14:"RNA Sequence", 15:"Protein Sequence", 16:"Sequence", 17:"sequence features"}
