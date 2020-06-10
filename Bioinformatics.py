@@ -60,7 +60,9 @@ class Graph:
 # Create a graph given in the above diagram 
 
 graph = Graph(8) 
-names = {0:"GeoID", 1:"fastsanger", 2:"BAM", 3:"countMatrix", 4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap", 7:"SAM"}
+names = {0:"GeoID", 1:"fastsanger", 2:"BAM", 3:"countMatrix", 4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap", 7:"SAM",
+         8:"Drug name", 9:"drug ID", 10:"drug pathway", 11:"chemical compound name", 12:"compound features", 13:"DNA Sequence", 
+         14:"RNA Sequence", 15:"Protein Sequence", 16:"Sequence", 17:"sequence features"}
 # nums = {0:"Download SRR Accessions", 1:"FastQC", 2:"Alignemt", 3:"countMatrix",4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap"}
 nums = {v.lower(): k for k, v in names.items()}
 
@@ -72,6 +74,16 @@ graph.addEdge(4, 5, "geoseq")
 graph.addEdge(5, 6, "heatmap2") 
 graph.addEdge(1, 7, "BWA")
 graph.addEdge(7, 2, "Picard")
+graph.addEdge(8, 9, "<name of some drug database to get drug ID>")
+graph.addEdge(9, 10, "SMPDB")
+graph.addEdge(11, 12, "FooDB")
+graph.addEdge(16, 13, "check compostion of sequence to determine the biomolecule(ATGC for DNA)")
+graph.addEdge(16, 14, "check compostion of sequence to determine the biomolecule(AUGC for RNA)")
+graph.addEdge(16, 15, "check compostion of sequence to determine the biomolecule(Amino Acids for Protein)")
+graph.addEdge(13, 17, "common DNA features are: ATGC composition, mass, length, etc")
+graph.addEdge(14, 17, "common RNA features are: AUGC composition, mass, length, etc")
+graph.addEdge(15, 17, "common Protein features are: Amino Acid composition, mass, length, charge etc")
+
 
 
 src = input("what type of data do you have? ")
