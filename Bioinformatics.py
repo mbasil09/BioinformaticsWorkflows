@@ -62,7 +62,8 @@ class Graph:
 graph = Graph(18) 
 names = {0:"GeoID", 1:"fastsanger", 2:"BAM", 3:"countMatrix", 4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap", 7:"SAM",
          8:"Drug name", 9:"drug ID", 10:"drug pathway", 11:"chemical compound name", 12:"compound features", 13:"DNA Sequence", 
-         14:"RNA Sequence", 15:"Protein Sequence", 16:"Sequence", 17:"sequence features"}
+         14:"RNA Sequence", 15:"Protein Sequence", 16:"Sequence", 17:"sequence features" 18:"FastQ", 19:"Fasta" 20:"Sequence ID"
+         21:"Raw variants" 22:"variants(indels and SNPs)"}
 # nums = {0:"Download SRR Accessions", 1:"FastQC", 2:"Alignemt", 3:"countMatrix",4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap"}
 nums = {v.lower(): k for k, v in names.items()}
 
@@ -77,24 +78,30 @@ graph.addEdge(7, 2, "Picard")
 graph.addEdge(8, 9, "<name of some drug database to get drug ID>")
 graph.addEdge(9, 10, "SMPDB")
 graph.addEdge(11, 12, "FooDB")
+graph.addEdge(2, 18, "HTSlib, and can be further compressed using gzip")
 graph.addEdge(16, 13, "check compostion of sequence to determine the biomolecule(ATGC for DNA)")
 graph.addEdge(16, 14, "check compostion of sequence to determine the biomolecule(AUGC for RNA)")
 graph.addEdge(16, 15, "check compostion of sequence to determine the biomolecule(Amino Acids for Protein)")
 graph.addEdge(13, 17, "common DNA features are: ATGC composition, mass, length, etc")
 graph.addEdge(14, 17, "common RNA features are: AUGC composition, mass, length, etc")
 graph.addEdge(15, 17, "common Protein features are: Amino Acid composition, mass, length, charge etc")
+graph.addEdge(18, 19, '"sed -n '1~4s/^@/>/p;2~4p' <input .fastq> > OUTFILE.fasta"')
+graph.addEdge(20, 19, '"seqtk subseq input.fasta name.list > output.fasta"')
+graph.addEdge(18, 7, "by mapping data to reference genome(may be done using BWA)")
+graph.addEdge(2, 21, "variant caller like HaplotypeCaller or UnifiedCaller(for polyploid) of the GATK piepline")
+graph.addEdge(21, 22, "By recalibrating the Raw variants using Variant Quality Scores (can be done by using GATK4 Pipeline.")
 
 
+while(1):
+	src = input("what type of data do you have? ")
+	src = nums[src.lower()]
+	term = input("what type of data do you need? ")
+	term = nums[term.lower()]
 
-src = input("what type of data do you have? ")
-src = nums[src.lower()]
-term = input("what type of data do you need? ")
-term = nums[term.lower()]
-
-order = graph.printAllPaths(src,term)
-for j in range(len(order)):
-	print("Method-"+str(j+1))
-	for i in range(len(order[j])-1):
-		print("step " + str(i+1) + ": " + names[order[j][i]] +" to "+names[order[j][i+1]] + " can be done using "+graph.names[(order[j][i]),order[j][i+1]])
-	print()
+	order = graph.printAllPaths(src,term)
+	for j in range(len(order)):
+		print("Method-"+str(j+1))
+		for i in range(len(order[j])-1):
+			print("step " + str(i+1) + ": " + names[order[j][i]] +" to "+names[order[j][i+1]] + " can be done using "+graph.names[(order[j][i]),order[j][i+1]])
+		print()
 
