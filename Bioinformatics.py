@@ -1,7 +1,7 @@
 # Python program to print all paths from a source to destination. 
-
 from collections import defaultdict 
 from copy import deepcopy
+import mysql.connector
 
 #This class represents a directed graph 
 # using adjacency list representation 
@@ -57,39 +57,30 @@ class Graph:
 
 
 
-# Create a graph given in the above diagram 
 
-graph = Graph(18) 
-names = {0:"GeoID", 1:"fastsanger", 2:"BAM", 3:"countMatrix", 4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap", 7:"SAM",
-         8:"Drug name", 9:"drug ID", 10:"drug pathway", 11:"chemical compound name", 12:"compound features", 13:"DNA Sequence", 
-         14:"RNA Sequence", 15:"Protein Sequence", 16:"Sequence", 17:"sequence features" 18:"FastQ", 19:"Fasta" 20:"Sequence ID"
-         21:"Raw variants" 22:"variants(indels and SNPs)"}
-# nums = {0:"Download SRR Accessions", 1:"FastQC", 2:"Alignemt", 3:"countMatrix",4:"Differential Analysis", 5:"Gene Ontologies", 6:"Heatmap"}
+database = mysql.connector.connect(host="localhost",user="root",password="1234",database="bioworkflows")
+cursor = database.cursor()
+
+cursor.execute("select * from nodes")
+fetched_nodes = cursor.fetchall()
+
+n = cursor.rowcount
+graph = Graph(n+1) 
+
+names = {}
+for i in fetched_nodes:
+	names[i[0]] = i[1]
 nums = {v.lower(): k for k, v in names.items()}
 
-graph.addEdge(0, 1, "Download fastsanger files using SRR Accesions from NCBI using the GeoID") 
-graph.addEdge(1, 2, "Bowtie2") 
-graph.addEdge(2, 3, "featureCounts") 
-graph.addEdge(3, 4, "DESeq2") 
-graph.addEdge(4, 5, "geoseq") 
-graph.addEdge(5, 6, "heatmap2") 
-graph.addEdge(1, 7, "BWA")
-graph.addEdge(7, 2, "Picard")
-graph.addEdge(8, 9, "<name of some drug database to get drug ID>")
-graph.addEdge(9, 10, "SMPDB")
-graph.addEdge(11, 12, "FooDB")
-graph.addEdge(2, 18, "HTSlib, and can be further compressed using gzip")
-graph.addEdge(16, 13, "check compostion of sequence to determine the biomolecule(ATGC for DNA)")
-graph.addEdge(16, 14, "check compostion of sequence to determine the biomolecule(AUGC for RNA)")
-graph.addEdge(16, 15, "check compostion of sequence to determine the biomolecule(Amino Acids for Protein)")
-graph.addEdge(13, 17, "common DNA features are: ATGC composition, mass, length, etc")
-graph.addEdge(14, 17, "common RNA features are: AUGC composition, mass, length, etc")
-graph.addEdge(15, 17, "common Protein features are: Amino Acid composition, mass, length, charge etc")
-graph.addEdge(18, 19, '"sed -n '1~4s/^@/>/p;2~4p' <input .fastq> > OUTFILE.fasta"')
-graph.addEdge(20, 19, '"seqtk subseq input.fasta name.list > output.fasta"')
-graph.addEdge(18, 7, "by mapping data to reference genome(may be done using BWA)")
-graph.addEdge(2, 21, "variant caller like HaplotypeCaller or UnifiedCaller(for polyploid) of the GATK piepline")
-graph.addEdge(21, 22, "By recalibrating the Raw variants using Variant Quality Scores (can be done by using GATK4 Pipeline.")
+cursor.execute("select * from noderelations")
+fetched_relations = cursor.fetchall()
+for i in fetched_relations:
+	cmd = "select * from relations where relationid="+str(i[2])
+	cursor.execute(cmd)
+	relation = cursor.fetchone()
+	graph.addEdge(i[0],i[1],relation[1]) 
+
+
 
 
 while(1):
@@ -104,4 +95,5 @@ while(1):
 		for i in range(len(order[j])-1):
 			print("step " + str(i+1) + ": " + names[order[j][i]] +" to "+names[order[j][i+1]] + " can be done using "+graph.names[(order[j][i]),order[j][i+1]])
 		print()
+
 
