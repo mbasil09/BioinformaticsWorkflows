@@ -58,10 +58,10 @@ class Graph:
 
 
 
-database = mysql.connector.connect(host="localhost",user="root",password="1234",database="bioworkflows")
+database = mysql.connector.connect(host="remotemysql.com",user="FkbucR2OLA",password="SdWDVN1cid",database="FkbucR2OLA")
 cursor = database.cursor()
 
-cursor.execute("select * from nodes")
+cursor.execute("select * from Nodes")
 fetched_nodes = cursor.fetchall()
 
 n = cursor.rowcount
@@ -72,10 +72,10 @@ for i in fetched_nodes:
 	names[i[0]] = i[1]
 nums = {v.lower(): k for k, v in names.items()}
 
-cursor.execute("select * from noderelations")
+cursor.execute("select * from NodeRelations")
 fetched_relations = cursor.fetchall()
 for i in fetched_relations:
-	cmd = "select * from relations where relationid="+str(i[2])
+	cmd = "select * from `Relations` where relationid="+str(i[2])
 	cursor.execute(cmd)
 	relation = cursor.fetchone()
 	graph.addEdge(i[0],i[1],relation[1]) 

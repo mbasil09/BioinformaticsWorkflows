@@ -1,6 +1,3 @@
-
-
-
 CREATE TABLE `Nodes` (
 	`NodeId` int NOT NULL AUTO_INCREMENT,
 	`NodeName` varchar(255) NOT NULL,
@@ -29,13 +26,13 @@ ALTER TABLE `NodeRelations` ADD CONSTRAINT `NodeRelations_fk2` FOREIGN KEY (`Rel
 
 
 
-insert into nodes(nodename) values ("GeoID"), ("fastsanger"), ("BAM"),("countMatrix"), ("Differential Analysis"), ("Gene Ontologies"), ("Heatmap"), ("SAM"),
+insert into Nodes(nodename) values ("GeoID"), ("fastsanger"), ("BAM"),("countMatrix"), ("Differential Analysis"), ("Gene Ontologies"), ("Heatmap"), ("SAM"),
          ("Drug name"), ("drug ID"),("drug pathway"), ("chemical compound name"), ("compound features"), ("DNA Sequence"),
          ("RNA Sequence"), ("Protein Sequence"), ("Sequence"),("sequence features"), ("FastQ"), ("Fasta"), ("Sequence ID"),
          ("Raw variants"), ("variants(indels and SNPs)");
 
 
-insert into relations(relationid, relation) 
+insert into Relations(relationid, relation) 
 values (1,"Download fastsanger files using SRR Accesions from NCBI using the GeoID"),
 (2,"Bowtie2"),(3,"featureCounts"),(4,"DESeq2"),(5,"geoseq"),(6,"heatmap2"),(7,"BWA"),(8,"Picard"),
 		(9,"<name of some drug database to get drug ID>"),(10,"SMPDB"),(11,"FooDB"),(12,"HTSlib, and can be further compressed using gzip"),
@@ -51,7 +48,7 @@ values (1,"Download fastsanger files using SRR Accesions from NCBI using the Geo
         (22,"variant caller like HaplotypeCaller or UnifiedCaller(for polyploid) of the GATK piepline"),
         (23,"By recalibrating the Raw variants using Variant Quality Scores (can be done by using GATK4 Pipeline.");
 
-insert into noderelations(node1,node2,relationID) 
+insert into NodeRelations(node1,node2,relationID) 
 values (1,2,1),(2,3,2),(3,4,3),(4,5,4),(5,6,5),(6,7,6),
 		(2,8,7),(8,3,8),(9,10,9),(10,11,10),(12,13,11),(3,19,12),
         (17,14,13),(17,15,14),(17,16,15),(14,18,16),(15,18,17),(16,18,18),
